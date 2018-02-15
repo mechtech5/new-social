@@ -1,5 +1,5 @@
 <?php
-include('classes/DB.php');
+include('./classes/DB.php');
 
 if(isset($_POST['createaccount'])) {
   $username = $_POST['username'];
@@ -12,8 +12,12 @@ if(isset($_POST['createaccount'])) {
   		if(!preg_match('/\W+/', $username)){
   			if(strlen($password) >= 6 && strlen($password) <= 60){
   				if(filter_var($email, FILTER_VALIDATE_EMAIL)){
-  					DB::query('INSERT INTO users VALUES (null, :username, :password, :email)', array(':username'=>$username, ':password'=>password_hash($password, PASSWORD_BCRYPT), ':email'=>$email));
-  					echo "Success!";
+            if(!DB::query('SELECT email FROM users WHERE email=:email', array(':email'=>$email))){
+              DB::query('INSERT INTO users VALUES (null, :username, :password, :email)', array(':username'=>$username, ':password'=>password_hash($password, PASSWORD_BCRYPT), ':email'=>$email));
+              echo "Success!";
+            }else{
+              echo "Email in use!";
+            }
 	  			}else{
 	  				echo "Invalid Email!";
 	  			}
