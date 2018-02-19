@@ -12,6 +12,8 @@ if (Login::isLoggedIn()) {
                                 if (strlen($newpassword) >= 6 && strlen($newpassword) <= 60) {
                                         DB::query('UPDATE users SET password=:newpassword WHERE id=:userid', array(':newpassword'=>password_hash($newpassword, PASSWORD_BCRYPT), ':userid'=>$userid));
                                         echo 'Password changed successfully!';
+                                }else{
+                                        echo 'Password Invalid!';
                                 }
                         } else {
                                 echo 'Passwords don\'t match!';
